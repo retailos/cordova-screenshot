@@ -55,7 +55,7 @@ public class Screenshot extends CordovaPlugin {
                                 Environment.getExternalStoragePublicDirectory(
                                     Environment.DIRECTORY_PICTURES
                                 ),
-                                "sofaworks"
+                                "screenshots"
                             );
 							if (!folder.exists()) {
 								folder.mkdirs();
