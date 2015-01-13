@@ -25,7 +25,9 @@ import android.graphics.Bitmap.CompressFormat;
 import android.os.Environment;
 import android.util.Base64;
 import android.view.View;
-
+import android.content.ContentValues;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 
 public class Screenshot extends CordovaPlugin {
 
@@ -48,20 +50,35 @@ public class Screenshot extends CordovaPlugin {
 							view.setDrawingCacheEnabled(true);
 							Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
 							view.setDrawingCacheEnabled(false);
-							File folder = new File(Environment.getExternalStorageDirectory(), "Pictures");
+                            
+							File folder = new File(
+                                Environment.getExternalStoragePublicDirectory(
+                                    Environment.DIRECTORY_PICTURES
+                                ),
+                                "sofaworks"
+                            );
 							if (!folder.exists()) {
 								folder.mkdirs();
 							}
 
 							File f = new File(folder, fileName + "."+format);
+                            ContentValues values = new ContentValues();
 
 							FileOutputStream fos = new FileOutputStream(f);
 							if(format.equals("png")){
 								bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                                values.put(Images.Media.MIME_TYPE, "image/png");
 							}
 							if(format.equals("jpg")){
 								bitmap.compress(Bitmap.CompressFormat.JPEG, quality == null?100:quality, fos);
+                                values.put(Images.Media.MIME_TYPE, "image/jpeg");
 							}
+                            
+                            values.put(Images.Media.DATE_TAKEN, System.currentTimeMillis());
+    
+                            values.put(MediaStore.MediaColumns.DATA, f.getAbsolutePath());
+                            cordova.getActivity().getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values);
+                            
 							JSONObject jsonRes = new JSONObject();
 							jsonRes.put("filePath",f.getAbsolutePath());
 				                        PluginResult result = new PluginResult(PluginResult.Status.OK, jsonRes);
