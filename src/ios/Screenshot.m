@@ -58,6 +58,8 @@
 	[imageData writeToFile:jpgPath atomically:NO];
 
 	UIGraphicsEndImageContext();
+    
+    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
 
 	CDVPluginResult* pluginResult = nil;
 	NSDictionary *jsonObj = [ [NSDictionary alloc]
@@ -68,7 +70,8 @@
 		];
 
 	pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonObj];
-	[self writeJavascript:[pluginResult toSuccessCallbackString:command.callbackId]];
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 @end
