@@ -52,14 +52,19 @@
 	CGContextFillRect(ctx, imageRect);
 
 	[webView.layer renderInContext:ctx];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIImage * landscapeImage = [[UIImage alloc] initWithCGImage: image.CGImage
+                                                         scale: 1.0
+                                                   orientation: UIImageOrientationRight];
 
-	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-	NSData *imageData = UIImageJPEGRepresentation(image,[quality floatValue]);
+	NSData *imageData = UIImageJPEGRepresentation(landscapeImage,[quality floatValue]);
 	[imageData writeToFile:jpgPath atomically:NO];
 
 	UIGraphicsEndImageContext();
     
-    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+    UIImageWriteToSavedPhotosAlbum(landscapeImage, nil, nil, nil);
 
 	CDVPluginResult* pluginResult = nil;
 	NSDictionary *jsonObj = [ [NSDictionary alloc]
