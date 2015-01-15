@@ -48,8 +48,13 @@ public class Screenshot extends CordovaPlugin {
 					try {
 						if(format.equals("png") || format.equals("jpg")){
 							view.setDrawingCacheEnabled(true);
-							Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+							Bitmap source = Bitmap.createBitmap(view.getDrawingCache());
 							view.setDrawingCacheEnabled(false);
+                            
+                            //rotate the image back
+                            Matrix matrix = new Matrix();
+                            matrix.postRotate(90);
+                            Bitmap bitmap = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
                             
 							File folder = new File(
                                 Environment.getExternalStoragePublicDirectory(
