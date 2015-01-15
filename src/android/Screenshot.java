@@ -22,6 +22,7 @@ import org.json.JSONException;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Matrix;
 import android.os.Environment;
 import android.util.Base64;
 import android.view.View;
